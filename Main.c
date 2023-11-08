@@ -4,26 +4,13 @@
 #include <conio.h>
 #include <windows.h>
 #include "time.h"
+
 #include "Bibliothèque_SousProgrammes.h"
 
-int main()
-{
-    char matrice[10][20];
+int main() {
 
-    while (1)
-    {
-
-        system("cls");
-
-        creationMatrice(matrice);
-
-        Chronometre();
-
-        usleep(100000);
-
-
-    }
+    creationMatrice();
+    afficherHorloge();
 
     return 0;
-
 }
