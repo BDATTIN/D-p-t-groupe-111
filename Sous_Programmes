@@ -1,9 +1,15 @@
+//
+// Created by ethan on 08/11/2023.
+//
+#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <conio.h>
 #include <windows.h>
 #include "time.h"
 #include "Bibliothèque_SousProgrammes.h"
+#include <windows.h>
+
 #define LIGNES 10
 #define COLONNES 20
 
@@ -15,35 +21,41 @@ void creationMatrice() {
     char coinHD = 0xBB;
     char coinBG = 0xC8;
     char coinBD = 0xBC;
-
-    while (1) {
-        for (int i = 0; i < LIGNES; i++) {
-            for (int j = 0; j < COLONNES; j++) {
-                if (i == 0 && j == 0) {
-                    matrice[i][j] = coinHG;
-                } else if (i == 0 && j == COLONNES - 1) {
-                    matrice[i][j] = coinHD;
-                } else if (i == LIGNES - 1 && j == 0) {
-                    matrice[i][j] = coinBG;
-                } else if (i == LIGNES - 1 && j == COLONNES - 1) {
-                    matrice[i][j] = coinBD;
-                } else if (i == 0 || i == LIGNES - 1) {
-                    matrice[i][j] = plafondSol;
-                } else if (j == 0 || j == COLONNES - 1) {
-                    matrice[i][j] = cote;
-                } else {
-                    matrice[i][j] = ' ';
-                }
+    for (int i = 0; i < LIGNES; i++) {
+        for (int j = 0; j < COLONNES; j++) {
+            if (i == 0 && j == 0) {
+                matrice[i][j] = coinHG;
+            } else if (i == 0 && j == COLONNES - 1) {
+                matrice[i][j] = coinHD;
+            } else if (i == LIGNES - 1 && j == 0) {
+                matrice[i][j] = coinBG;
+            } else if (i == LIGNES - 1 && j == COLONNES - 1) {
+                matrice[i][j] = coinBD;
+            } else if (i == 0 || i == LIGNES - 1) {
+                matrice[i][j] = plafondSol;
+            } else if (j == 0 || j == COLONNES - 1) {
+                matrice[i][j] = cote;
+            } else {
+                matrice[i][j] = ' ';
             }
         }
-        for (int i = 0; i < LIGNES; i++) {
-            for (int j = 0; j < COLONNES; j++) {
-                printf("%c", matrice[i][j]);
-            }
-            printf("\n");
+    }
+    for (int i = 0; i < LIGNES; i++) {
+        for (int j = 0; j < COLONNES; j++) {
+            printf("%c", matrice[i][j]);
         }
-        usleep(10000);
-        system("cls");
+        printf("\n");
     }
 
+}
+
+
+
+void afficherHorloge() {
+    for (int secondes = 120; secondes >= 0; secondes--) {
+        printf("Attention !! Il ne vous reste que : %d secondes\n", secondes);
+        Sleep(1000);
+        system("cls");
+        creationMatrice();
+    }
 }
