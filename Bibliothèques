@@ -1,2 +1,14 @@
-void creationMatrice (char matrice[10][20]);
-int Chronometre();
+//
+// Created by ethan on 08/11/2023.
+//
+
+#ifndef PROJET_SNOOPY_BIBLIOTHÈQUE_SOUSPROGRAMMES_H
+#define PROJET_SNOOPY_BIBLIOTHÈQUE_SOUSPROGRAMMES_H
+#define LIGNES 10
+#define COLONNES 20
+
+
+#endif //PROJET_SNOOPY_BIBLIOTHÈQUE_SOUSPROGRAMMES_H
+void creationMatrice(char matrice[LIGNES][COLONNES], int tempsRestant);
+void afficherHorloge(void* param);
+void afficherSNOOPY();
