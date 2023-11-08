@@ -13,7 +13,6 @@
 int main()
 {
 
-    _beginthread(afficherHorloge, 0, NULL);
     afficherSNOOPY();
 
     return 0;
