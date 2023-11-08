@@ -1,0 +1,51 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <conio.h>
+#include <windows.h>
+#include "time.h"
+#include "Bibliothèque_SousProgrammes.h"
+
+void creationMatrice(char matrice[10][20])
+{
+
+    char cote = 0xBA;
+    char plafondSol = 0xCD ;
+    char coin = 0xCE  ;
+    int longueur = 20 ;
+    int largeur = 10;
+    for (int i = 0; i < largeur; i++) {
+        for (int j = 0; j < longueur; j++) {
+            if (i == 0 || i == largeur - 1) {
+                if (j == 0 || j == longueur - 1) {
+                    matrice[i][j] = coin ;
+                } else {
+                    matrice[i][j] = plafondSol ;
+                }
+            } else {
+                if (j == 0 || j == longueur - 1) {
+                    matrice[i][j] = cote;
+                } else {
+                    matrice[i][j] = ' ';
+                }
+            }
+        }
+    }
+    for (int i = 0; i < largeur; i++) {
+        for (int j = 0; j < longueur; j++) {
+            printf("%c ", matrice[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+
+int Chronometre()
+{
+    int secondes = 120;
+    int TempsRestant ;
+    TempsRestant = secondes --;
+    return TempsRestant;
+
+
+}
