@@ -1,51 +1,49 @@
-#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <conio.h>
 #include <windows.h>
 #include "time.h"
 #include "Bibliothèque_SousProgrammes.h"
+#define LIGNES 10
+#define COLONNES 20
 
-void creationMatrice(char matrice[10][20])
-{
-
+void creationMatrice() {
+    char matrice[LIGNES][COLONNES];
     char cote = 0xBA;
-    char plafondSol = 0xCD ;
-    char coin = 0xCE  ;
-    int longueur = 20 ;
-    int largeur = 10;
-    for (int i = 0; i < largeur; i++) {
-        for (int j = 0; j < longueur; j++) {
-            if (i == 0 || i == largeur - 1) {
-                if (j == 0 || j == longueur - 1) {
-                    matrice[i][j] = coin ;
-                } else {
-                    matrice[i][j] = plafondSol ;
-                }
-            } else {
-                if (j == 0 || j == longueur - 1) {
+    char plafondSol = 0xCD;
+    char coinHG = 0xC9;
+    char coinHD = 0xBB;
+    char coinBG = 0xC8;
+    char coinBD = 0xBC;
+
+    while (1) {
+        for (int i = 0; i < LIGNES; i++) {
+            for (int j = 0; j < COLONNES; j++) {
+                if (i == 0 && j == 0) {
+                    matrice[i][j] = coinHG;
+                } else if (i == 0 && j == COLONNES - 1) {
+                    matrice[i][j] = coinHD;
+                } else if (i == LIGNES - 1 && j == 0) {
+                    matrice[i][j] = coinBG;
+                } else if (i == LIGNES - 1 && j == COLONNES - 1) {
+                    matrice[i][j] = coinBD;
+                } else if (i == 0 || i == LIGNES - 1) {
+                    matrice[i][j] = plafondSol;
+                } else if (j == 0 || j == COLONNES - 1) {
                     matrice[i][j] = cote;
                 } else {
                     matrice[i][j] = ' ';
                 }
             }
         }
-    }
-    for (int i = 0; i < largeur; i++) {
-        for (int j = 0; j < longueur; j++) {
-            printf("%c ", matrice[i][j]);
+        for (int i = 0; i < LIGNES; i++) {
+            for (int j = 0; j < COLONNES; j++) {
+                printf("%c", matrice[i][j]);
+            }
+            printf("\n");
         }
-        printf("\n");
+        usleep(10000);
+        system("cls");
     }
-}
-
-
-int Chronometre()
-{
-    int secondes = 120;
-    int TempsRestant ;
-    TempsRestant = secondes --;
-    return TempsRestant;
-
 
 }
