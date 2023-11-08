@@ -29,7 +29,7 @@ void creationMatrice(char matrice[LIGNES][COLONNES], int tempsRestant)
         putchar(plafondSol);
     }
     putchar(coinHD);
-    putchar('\n');
+    putchar('  ');
     printf("Attention !! Il ne vous reste que : %d secondes\n", tempsRestant);
 
     for (int i = 0; i < LIGNES; i++)
@@ -49,7 +49,6 @@ void creationMatrice(char matrice[LIGNES][COLONNES], int tempsRestant)
     }
     putchar(coinBD);
     putchar('\n');
-    usleep(100000);
 }
 
 
@@ -69,9 +68,11 @@ void afficherSNOOPY() {
 
     char matrice[LIGNES][COLONNES];
     char SNOOPY = 0xE1;
-    int tempsRestant;
+    int tempsRestant = 120 ;
     int PositionInitX = COLONNES / 2;
     int PositionInitY = LIGNES / 2;
+    _beginthread(afficherHorloge, 0, &tempsRestant);
+
 
     while (1) {
         for (int i = 0; i < LIGNES; i++)
@@ -105,8 +106,7 @@ void afficherSNOOPY() {
                 PositionInitY++;
             }
         }
-        usleep(10000);
+        usleep(1000);
     }
-
 }
 
