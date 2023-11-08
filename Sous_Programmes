@@ -19,6 +19,7 @@
 #define coinHD 0xBB
 #define coinBG 0xC8
 #define coinBD 0xBC
+#define SNOOPY 0xF5
 
 void creationMatrice(char matrice[LIGNES][COLONNES], int tempsRestant)
 {
@@ -56,7 +57,7 @@ void creationMatrice(char matrice[LIGNES][COLONNES], int tempsRestant)
 void afficherHorloge(void* param)
 {
     int* secondes = (int*)param;
-    for (*secondes = 120; *secondes >= 0; (*secondes)--)
+    for (*secondes = 12; *secondes >= 0; (*secondes)--)
     {
         Sleep(1000);
     }
@@ -67,8 +68,7 @@ void afficherHorloge(void* param)
 void afficherSNOOPY() {
 
     char matrice[LIGNES][COLONNES];
-    char SNOOPY = 0xE1;
-    int tempsRestant = 120 ;
+    int tempsRestant = 12 ;
     int PositionInitX = COLONNES / 2;
     int PositionInitY = LIGNES / 2;
     _beginthread(afficherHorloge, 0, &tempsRestant);
@@ -84,7 +84,7 @@ void afficherSNOOPY() {
         }
         matrice[PositionInitY][PositionInitX] = SNOOPY ;
         creationMatrice(matrice,tempsRestant);
-        Sleep(200);
+        Sleep(100);
 
         if (_kbhit()) {
 
@@ -106,7 +106,12 @@ void afficherSNOOPY() {
                 PositionInitY++;
             }
         }
-        usleep(1000);
     }
 }
 
+int GameOver()
+{
+    system("cls");
+    printf("Game Over\n");
+    return 0;
+}
