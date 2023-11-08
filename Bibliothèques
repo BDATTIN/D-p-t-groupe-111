@@ -1,0 +1,2 @@
+void creationMatrice (char matrice[10][20]);
+int Chronometre();
