@@ -1,0 +1,50 @@
+- Algorithme de l'horloge.
+
+Algorithme afficherHorloge(param: pointeur vers entier)
+    secondes <- (entier) pointé par param
+    
+    TANT_QUE secondes >= 0 FAIRE
+        afficher secondes  // Cette étape simule l'affichage des secondes
+        attendre(1 seconde)  // Cette étape simule l'attente d'une seconde
+        secondes <- secondes - 1
+    FIN TANT_QUE
+    
+FIN Algorithme
+
+
+
+Algorithme de la matrice (à vérifier)
+
+Algorithme creationMatrice(matrice: tableau de caractères[LIGNES][COLONNES], tempsRestant: entier)
+    Effacer l'écran
+    Afficher le coin en haut à gauche
+
+    POUR chaque colonne de la matrice FAIRE
+        Afficher le plafond/sol
+    FIN POUR
+
+    Afficher le coin en haut à droite
+    Afficher deux espaces
+    Afficher "Attention !! Il ne vous reste que : %d secondes\n", tempsRestant
+
+    POUR chaque ligne de la matrice FAIRE
+        Afficher le côté gauche
+        POUR chaque colonne de la matrice FAIRE
+            Afficher le caractère de la matrice à la position (i, j)
+        FIN POUR
+        Afficher le côté droit
+        Aller à la ligne
+    FIN POUR
+
+    Afficher le coin en bas à gauche
+
+    POUR chaque colonne de la matrice FAIRE
+        Afficher le plafond/sol
+    FIN POUR
+
+    Afficher le coin en bas à droite
+    Aller à la ligne
+
+FIN Algorithme
+
+
