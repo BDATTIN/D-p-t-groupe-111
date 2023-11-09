@@ -1,3 +1,6 @@
+//
+// Created by ethan on 08/11/2023.
+//
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -5,47 +8,111 @@
 #include <windows.h>
 #include "time.h"
 #include "Bibliothèque_SousProgrammes.h"
+#include <windows.h>
+#include <stdbool.h>
 
-void creationMatrice(char matrice[10][20])
+#define LIGNES 10
+#define COLONNES 20
+#define cote 0xBA
+#define plafondSol 0xCD
+#define coinHG 0xC9
+#define coinHD 0xBB
+#define coinBG 0xC8
+#define coinBD 0xBC
+#define SNOOPY 0xF5
+
+void creationMatrice(char matrice[LIGNES][COLONNES], int tempsRestant)
 {
+    system("cls");
+    putchar(coinHG);
+    for (int i = 0; i < COLONNES; i++)
+    {
+        putchar(plafondSol);
+    }
+    putchar(coinHD);
+    putchar('  ');
+    printf("Attention !! Il ne vous reste que : %d secondes\n", tempsRestant);
 
-    char cote = 0xBA;
-    char plafondSol = 0xCD ;
-    char coin = 0xCE  ;
-    int longueur = 20 ;
-    int largeur = 10;
-    for (int i = 0; i < largeur; i++) {
-        for (int j = 0; j < longueur; j++) {
-            if (i == 0 || i == largeur - 1) {
-                if (j == 0 || j == longueur - 1) {
-                    matrice[i][j] = coin ;
-                } else {
-                    matrice[i][j] = plafondSol ;
-                }
-            } else {
-                if (j == 0 || j == longueur - 1) {
-                    matrice[i][j] = cote;
-                } else {
-                    matrice[i][j] = ' ';
-                }
+    for (int i = 0; i < LIGNES; i++)
+    {
+        putchar(cote);
+        for (int j = 0; j < COLONNES; j++)
+        {
+            putchar(matrice[i][j]);
+        }
+        putchar(cote);
+        putchar('\n');
+    }
+    putchar(coinBG);
+    for (int i = 0; i < COLONNES; i++)
+    {
+        putchar(plafondSol);
+    }
+    putchar(coinBD);
+    putchar('\n');
+}
+
+
+void afficherHorloge(void* param)
+{
+    int* secondes = (int*)param;
+    for (*secondes = 120; *secondes >= 0; (*secondes)--)
+    {
+        Sleep(1000);
+    }
+}
+
+
+void afficherSNOOPY() {
+
+    char matrice[LIGNES][COLONNES];
+    int tempsRestant = 120 ;
+    int PositionInitX = COLONNES / 2;
+    int PositionInitY = LIGNES / 2;
+    _beginthread(afficherHorloge, 0, &tempsRestant);
+
+
+    while (1) {
+        for (int i = 0; i < LIGNES; i++)
+        {
+            for (int j = 0; j < COLONNES; j++)
+            {
+                matrice[i][j] = ' ';
+            }
+        }
+        matrice[PositionInitY][PositionInitX] = SNOOPY ;
+        creationMatrice(matrice,tempsRestant);
+        Sleep(100);
+
+        if (_kbhit()) {
+
+            char deplacement = _getch();
+
+            matrice[PositionInitY][PositionInitX] = ' ';
+
+            if (deplacement == 'q' && PositionInitX > 0)
+            {
+                PositionInitX--;
+            } else if (deplacement == 'd' && PositionInitX < COLONNES - 1)
+            {
+                PositionInitX++;
+            } else if (deplacement == 'z' && PositionInitY > 0)
+            {
+                PositionInitY--;
+            } else if (deplacement == 's' && PositionInitY < LIGNES - 1)
+            {
+                PositionInitY++;
             }
         }
     }
-    for (int i = 0; i < largeur; i++) {
-        for (int j = 0; j < longueur; j++) {
-            printf("%c ", matrice[i][j]);
-        }
-        printf("\n");
-    }
 }
 
 
-int Chronometre()
+int GameOver()
 {
-    int secondes = 120;
-    int TempsRestant ;
-    TempsRestant = secondes --;
-    return TempsRestant;
-
-
+    system("cls");
+    printf("Game Over\n");
+    return 0;
 }
+
+
