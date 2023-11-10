@@ -1,0 +1,58 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <conio.h>
+#include <windows.h>
+#include "time.h"
+#include "Bibliothèque_SousProgrammes.h"
+#include <stdbool.h>
+#define LIGNES 10
+#define COLONNES 20
+#define ECHAP 0x1B
+
+
+
+
+int main() {
+    int choix;
+    while (choix != 6) {
+        printf("Snoopy et la chasse aux oiseaux \n\n\tVoir les regles du jeu : 1\n\n\tDemarrer une nouvelle partie au niveau 1 : 2\n\n\tCharger une partie (pas encore disponible) : 3\n\n\tMot de passe(pas encore disponible) : 4\n\n\tScores(pas encore disponible) : 5\n\n\tSortir du jeu : 6\n\n");
+        scanf("%d", &choix);
+
+        switch (choix) {
+            case 1 :
+                RegleDuJeu();
+                RevenirMenuPrincipale();
+                break;
+            case 2 :
+                afficherSNOOPY();
+                RevenirMenuPrincipale();
+                break;
+            case 3 :
+                system("cls");
+                printf("Choisir un ancien ficher de sauvegarde :\n");
+                RevenirMenuPrincipale();
+                break;
+            case 4 :
+                system("cls");
+                printf("1\n");
+                RevenirMenuPrincipale();
+                break;
+            case 5 :
+                system("cls");
+                printf("Le score de votre partie en cours est de :\n");
+                RevenirMenuPrincipale();
+                break;
+            case 6 :
+                system("cls");
+                printf("\n Vous avez decider de quitter le jeu ! A bientot ;)");
+                sleep(2);
+                break;
+            default:
+                printf("\nL'option que vous avez choisit n'est pas valide. Reessayer\n");
+                break;
+
+        }
+    }
+    return 0;
+}
