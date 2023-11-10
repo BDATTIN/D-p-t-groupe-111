@@ -1,0 +1,179 @@
+//
+// Created by ethan on 08/11/2023.
+//
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <conio.h>
+#include <windows.h>
+#include "time.h"
+#include "Bibliothèque_SousProgrammes.h"
+#include <windows.h>
+#include <stdbool.h>
+#include <process.h>
+
+#define LIGNES 10
+#define COLONNES 20
+#define cote 0xBA
+#define plafondSol 0xCD
+#define coinHG 0xC9
+#define coinHD 0xBB
+#define coinBG 0xC8
+#define coinBD 0xBC
+#define SNOOPY 0xF5
+#define Entree 0x0D
+#define ECHAP 0x1B
+
+
+void creationMatrice(char matrice[LIGNES][COLONNES], int tempsRestant)
+{
+    system("cls");
+    putchar(coinHG);
+    for (int i = 0; i < COLONNES; i++)
+    {
+        putchar(plafondSol);
+    }
+    putchar(coinHD);
+    putchar('  ');
+    printf("Attention !! Il ne vous reste que : %d secondes (Appuyer sur entree pour lancer le jeu)\n", tempsRestant);
+
+    for (int i = 0; i < LIGNES; i++)
+    {
+        putchar(cote);
+        for (int j = 0; j < COLONNES; j++)
+        {
+            putchar(matrice[i][j]);
+        }
+        putchar(cote);
+        putchar('\n');
+    }
+    putchar(coinBG);
+    for (int i = 0; i < COLONNES; i++)
+    {
+        putchar(plafondSol);
+    }
+    putchar(coinBD);
+    putchar('\n');
+}
+
+void afficherHorloge(void* param)
+{
+    int* secondes = (int*)param;
+    while (_getch() != Entree);
+    while (*secondes > 0)
+    {
+        Sleep(1000);
+        if (*secondes > 0 )
+        {
+            (*secondes)--;
+        }
+    }
+}
+
+
+void afficherSNOOPY() {
+
+    char matrice[LIGNES][COLONNES];
+    int tempsRestant = 12 ;
+    int PositionInitX = COLONNES / 2;
+    int PositionInitY = LIGNES / 2;
+    _beginthread(afficherHorloge, 0, &tempsRestant);
+    while (1) {
+        for (int i = 0; i < LIGNES; i++)
+        {
+            for (int j = 0; j < COLONNES; j++)
+            {
+                matrice[i][j] = ' ';
+            }
+        }
+        matrice[PositionInitY][PositionInitX] = SNOOPY ;
+        creationMatrice(matrice,tempsRestant);
+        Sleep(80);
+
+        if (_kbhit()) {
+
+            char deplacement = _getch();
+
+            matrice[PositionInitY][PositionInitX] = ' ';
+
+            if (deplacement == 'q' && PositionInitX > 0)
+            {
+                PositionInitX--;
+            } else if (deplacement == 'd' && PositionInitX < COLONNES - 1)
+            {
+                PositionInitX++;
+            } else if (deplacement == 'z' && PositionInitY > 0)
+            {
+                PositionInitY--;
+            } else if (deplacement == 's' && PositionInitY < LIGNES - 1)
+            {
+                PositionInitY++;
+            }
+            else if (deplacement == 'm')
+            {
+                MettreEnPause();
+            }
+        }
+    }
+}
+
+
+void MettreEnPause()
+{
+    printf("\nVous avez decide de mettre en pause le jeu !. Si vous voulez reprendre le jeu cliquer sur 'm'...\n");
+    while (_getch() != 'm');
+}
+
+void GameOver()
+{
+    system("cls");
+    printf("Game Over\n");
+}
+
+void afficherBalle(char matrice[LIGNES][COLONNES])
+{
+    static int positionBalleX, positionBalleY; // Déclarez-les comme statiques
+    static int directionBalleX, directionBalleY;
+    positionBalleX = COLONNES /4 ;
+    positionBalleY = LIGNES /3 ;
+    directionBalleX =1;
+    directionBalleY = 1;
+
+    if (positionBalleX <= 1 || positionBalleX >= COLONNES - 2) {
+        directionBalleX = -directionBalleX ;  // Rebond sur les bords horizontaux
+    }
+
+    if (positionBalleY <= 1 || positionBalleY >= LIGNES - 2) {
+        directionBalleY = -directionBalleY ;  // Rebond sur les bords verticaux
+    }
+
+    positionBalleX += directionBalleX;
+    positionBalleY += directionBalleY;
+
+    // Le reste de votre code pour afficher la balle
+}
+
+void RegleDuJeu()
+{
+    system("cls");
+    printf("Bienvenue dans notre tout nouveau jeu de Snoopy et la chasse aux oiseaux,"
+           "\n\n Objectif du Jeu:\n\t Aide Snoopy a attraper 4 oiseaux chacun cache dans un coin du niveau avant que le temps ne s'epuise."
+           "\n\n Defis a surmonter :"
+           "\n\n La Balle Rebondissante: Une balle rebondit de maniere incontrolable dans le niveau pour t'embeter. Evite-la et reste en securite !(attention elle traverse les murs)"
+           "\n\n Les blocs : Parfois, tu devras pousser ou casser des blocs pour atteindre les oiseaux. C'est un jeu de strategie ! "
+           "\n\n\t Gagne la Partie: \nAttrape les 4 oiseaux dans le temps imparti et montre a Snoopy que tu es le meilleur ami de tous les temps !"
+           "\n\n\n(Appuyer sur echap pour revenir au menu principal)");
+}
+
+void RevenirMenuPrincipale()
+{
+    while (1)
+    {
+        char btn = getche();
+        if ((int)btn == ECHAP)
+        {
+            break;
+        }
+    }
+    system("cls");
+}
