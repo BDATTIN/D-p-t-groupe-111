@@ -35,7 +35,7 @@ void creationMatrice(char matrice[LIGNES][COLONNES], int tempsRestant)
     }
     putchar(coinHD);
     putchar('  ');
-    printf("Attention !! Il ne vous reste que : %d secondes (Appuyer sur entree pour lancer le jeu)\n", tempsRestant);
+    printf("Attention !! Il ne vous reste que : %d secondes\n", tempsRestant);
 
     for (int i = 0; i < LIGNES; i++)
     {
@@ -88,7 +88,9 @@ void afficherSNOOPY() {
         }
         matrice[PositionInitY][PositionInitX] = SNOOPY ;
         creationMatrice(matrice,tempsRestant);
-        Sleep(80);
+        printf("\n(Appuyer sur entree pour lancer le jeu et sur m pour la stopper)"
+               "\n(Appuyer sur r pour acceder au regles du jeu)");
+        Sleep(100);
 
         if (_kbhit()) {
 
@@ -113,6 +115,10 @@ void afficherSNOOPY() {
             {
                 MettreEnPause();
             }
+            else if (deplacement == 'r')
+            {
+                VoirReglesInGame();
+            }
         }
     }
 }
@@ -124,10 +130,19 @@ void MettreEnPause()
     while (_getch() != 'm');
 }
 
-void GameOver()
+void VoirReglesInGame()
 {
     system("cls");
-    printf("Game Over\n");
+    RegleDuJeu();
+    while (_getch() != 'r');
+}
+
+void GameOver()
+{
+    while (1) {
+        system("cls");
+        printf("Game Over\n");
+    }
 }
 
 void afficherBalle(char matrice[LIGNES][COLONNES])
@@ -177,3 +192,5 @@ void RevenirMenuPrincipale()
     }
     system("cls");
 }
+
+
