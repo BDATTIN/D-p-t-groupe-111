@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 
-int blocSurprise() {
+int blocs() {
     int MIN = 0;
     int MAX = 1000;
     int nb_alea = MIN + rand() % (MAX - MIN + 1);
@@ -12,7 +12,7 @@ return nb_alea;
 int main() {
     int seed = 111;
     srand((unsigned int)&seed);
-    int nb_alea = blocSurprise();
+    int nb_alea = blocs();
     printf("Le nombre est : %d\n", nb_alea);
     if(nb_alea == 666){
         printf("Pas de chance, vous etes tombe sur la malediction de la balle et elle vous a tuee instantanement\n");
