@@ -1,7 +1,7 @@
 //
 // Created by ethan on 08/11/2023.
 //
-#include <stdio.h>
+#include <studio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <conio.h>
