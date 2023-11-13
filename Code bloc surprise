@@ -1,0 +1,17 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h> 
+
+int blocSurprise() {
+    int MIN = 0;
+    int MAX = 1000;
+    int nb_alea = MIN + rand() % (MAX - MIN + 1);
+return nb_alea;
+}
+
+int main() {
+    srand(time(NULL));
+    int nb_alea = blocSurprise();
+    printf("Le nombre est : %d\n", nb_alea);
+return 0;
+}
