@@ -47,4 +47,18 @@ Algorithme creationMatrice(matrice: tableau de caractères[LIGNES][COLONNES], te
 
 FIN Algorithme
 
+ Algorithme de l'horloge.
+
+Algorithme afficherHorloge(param: pointeur vers entier)
+    secondes <- (entier) pointé par param
+    
+    TANT_QUE secondes >= 0 FAIRE
+        afficher secondes  // Cette étape simule l'affichage des secondes
+        attendre(1 seconde)  // Cette étape simule l'attente d'une seconde
+        secondes <- secondes - 1
+    FIN TANT_QUE
+    
+FIN Algorithme
+
+
 
