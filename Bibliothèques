@@ -12,4 +12,14 @@
 void creationMatrice(char matrice[LIGNES][COLONNES], int tempsRestant);
 void afficherHorloge(void* param);
 void afficherSNOOPY();
+void MettreEnPause();
+void RegleDuJeu ();
+void RevenirMenuPrincipale();
+void VoirReglesInGame();
+int ScorePartie(int tempsRestant);
+void ScoreMenu ();
+void PoserBloc(char matrice[LIGNES][COLONNES], int x, int y);
+void Color(int couleurDuTexte,int couleurDeFond);
+void centrerTexte(int largeurTexte);
+void encadrerTitre(int largeurTexte);
 
