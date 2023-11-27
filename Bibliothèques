@@ -22,4 +22,4 @@ void PoserBloc(char matrice[LIGNES][COLONNES], int x, int y);
 void Color(int couleurDuTexte,int couleurDeFond);
 void centrerTexte(int largeurTexte);
 void encadrerTitre(int largeurTexte);
-
+void afficherBlocSpecial(char matrice[LIGNES][COLONNES], int x, int y);
