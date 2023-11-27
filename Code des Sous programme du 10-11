@@ -25,7 +25,7 @@
 #define ECHAP 0x1B
 
 
-void creationMatrice(char matrice[LIGNES][COLONNES], int tempsRestant)
+void creationMatrice(char matrice[LIGNES][COLONNES], int tempsRestant, int positionBlocX, int positionBlocY)
 {
     system("cls");
     putchar(coinHG);
@@ -68,6 +68,7 @@ void afficherHorloge(void* param)
             (*secondes)--;
         }
     }
+afficherBlocSpecial(matrice, positionBlocX, positionBlocY);
 }
 
 
