@@ -13,6 +13,8 @@
 
 int main() {
     int choix;
+    int positionBlocSpecialX = 7;
+    int positionBlocSpecialY = 13;
     while (choix != 6)
     {
         Color(3,0);
@@ -44,7 +46,7 @@ int main() {
                 RevenirMenuPrincipale();
                 break;
             case 2 :
-                afficherSNOOPY();
+                afficherSNOOPY(positionBlocSpecialX, positionBlocSpecialY);
                 RevenirMenuPrincipale();
                 break;
             case 3 :
