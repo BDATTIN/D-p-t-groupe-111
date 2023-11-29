@@ -71,6 +71,7 @@ void creationMatrice(char matrice[LIGNES][COLONNES], int tempsRestant)
     }
     putchar(coinBD);
     putchar('\n');
+    matrice[positionBlocSurpriseY][positionBlocSurpriseX] = blocSurpriseActive ? '#' : ' ';
 }
 
 void afficherHorloge(void* param) {
@@ -119,8 +120,11 @@ void afficherSNOOPY()
     int directionBalleX = 1;
     int directionBalleY = 1;
 
-    int positionBlocSupriseX = rand() % (COLONNES - 2) + 1;
-    int positionBlocSupriseY = rand() % (LIGNES - 2) + 1;
+    int positionBlocSupriseX = -1;
+    int positionBlocSupriseY = -1;
+    genererCoordonneesBlocSurprise();
+    bool blocSurpriseActive = false;
+
 
     int Oiseau1_X = 0;
     int Oiseau1_Y = 0;
@@ -189,6 +193,14 @@ void afficherSNOOPY()
         }
 
         matrice[positionBalleY][positionBalleX] = 'O' ;
+        if (PositionInitX == positionBlocSurpriseX && PositionInitY == positionBlocSurpriseY && !blocSurpriseActive) {
+            blocSurpriseActive = true;
+            afficherBlocSurprise();
+        }
+        if (PositionInitX == positionBlocSurpriseX && PositionInitY == positionBlocSurpriseY && !blocSurpriseActive) {
+            blocSurpriseActive = true;
+            afficherBlocSurprise();
+        }
 
         creationMatrice(matrice, tempsRestant);
 
@@ -265,6 +277,7 @@ void afficherSNOOPY()
             {
                 oiseauxACapture[3] = true;
             }
+           
         }
         Sleep(100);
     }
@@ -272,6 +285,7 @@ void afficherSNOOPY()
     jeuEnCours = true;
     jeuEnPause = false;
     reglesInGame = false;
+    
 }
 
 void MettreEnPause()
@@ -406,6 +420,15 @@ void afficherBlocSurprise(){
     } else if (800 <= nb_alea && nb_alea <= 1000) {
         printf("Vous avez perdu une vie.\n");
     }
+    blocSurpriseActive = false;
     return 0;
 }
+
+void genererCoordonneesBlocSurprise() {
+    do {
+        positionBlocSurpriseX = rand() % (COLONNES - 2) + 1;
+        positionBlocSurpriseY = rand() % (LIGNES - 2) + 1;
+    } while (matrice[positionBlocSurpriseY][positionBlocSurpriseX] != ' '); 
+}
+
 
