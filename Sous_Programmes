@@ -193,10 +193,7 @@ void afficherSNOOPY()
         }
 
         matrice[positionBalleY][positionBalleX] = 'O' ;
-        if (PositionInitX == positionBlocSurpriseX && PositionInitY == positionBlocSurpriseY && !blocSurpriseActive) {
-            blocSurpriseActive = true;
-            afficherBlocSurprise();
-        }
+
         if (PositionInitX == positionBlocSurpriseX && PositionInitY == positionBlocSurpriseY && !blocSurpriseActive) {
             blocSurpriseActive = true;
             afficherBlocSurprise();
