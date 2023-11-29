@@ -119,6 +119,9 @@ void afficherSNOOPY()
     int directionBalleX = 1;
     int directionBalleY = 1;
 
+    int positionBlocSupriseX = rand() % (COLONNES - 2) + 1;
+    int positionBlocSupriseY = rand() % (LIGNES - 2) + 1;
+
     int Oiseau1_X = 0;
     int Oiseau1_Y = 0;
     int Oiseau2_X = COLONNES - 1;
