@@ -377,5 +377,32 @@ void encadrerTitre(int largeurTexte)
     printf("\n ");
 }
 
+void afficherBlocSurprise(){
+    int seed = 111;
+    srand((unsigned int)&seed);
+    int MIN = 0;
+    int MAX = 1000;
+    int nb_alea = MIN + rand() % (MAX - MIN + 1);
 
+
+
+    if (nb_alea == 666) {
+        printf("Pas de chance, vous etes tombe sur la malediction de la balle et elle vous a tuee instantanement\n");
+    } else if (nb_alea == 777) {
+        printf("Wow tous les oiseaux ont accourus vers vous. Vous avez gagne\n");
+    } else if (666 < nb_alea && nb_alea < 777) {
+        printf("Dommage, il n'y avait rien.\n");
+    } else if (0 <= nb_alea && nb_alea < 200) {
+        printf("La balle est gelee pendant 5 secondes.\n");
+    } else if (200 <= nb_alea && nb_alea < 400) {
+        printf("La balle s'est dedoublee!!\n");
+    } else if (400 <= nb_alea && nb_alea < 600) {
+        printf("Vous avez gagne une vie.\n");
+    } else if ((600 <= nb_alea && nb_alea < 666) || (777 < nb_alea && nb_alea < 800)) {
+        printf("Vous etes invincible pendant 5 secondes.\n");
+    } else if (800 <= nb_alea && nb_alea <= 1000) {
+        printf("Vous avez perdu une vie.\n");
+    }
+    return 0;
+}
 
