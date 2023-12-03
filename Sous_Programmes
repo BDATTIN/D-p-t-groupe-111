@@ -24,14 +24,18 @@
 #define Entree 0x0D
 #define ECHAP 0x1B
 #define OISEAUX 0xA9
-#define BLOC 0xFE
-
 
 bool jeuEnCours = true;
 bool jeuEnPause = false;
 bool reglesInGame = false;
 int scorePartie = 0;
+int scoreTotal = 0;
 int ViesRestantes = 3;
+
+char motDePasseNiveau1[] = "banane";
+char motDePasseNiveau2[] = "tropicana";
+char motDePasseNiveau3[] = "ordinateur";
+char motDePasseNiveau4[] = "impossible";
 
 void creationMatrice(char matrice[LIGNES][COLONNES], int tempsRestant)
 {
@@ -71,7 +75,6 @@ void creationMatrice(char matrice[LIGNES][COLONNES], int tempsRestant)
     }
     putchar(coinBD);
     putchar('\n');
-    matrice[positionBlocSurpriseY][positionBlocSurpriseX] = blocSurpriseActive ? '#' : ' ';
 }
 
 void afficherHorloge(void* param) {
@@ -120,12 +123,6 @@ void afficherSNOOPY()
     int directionBalleX = 1;
     int directionBalleY = 1;
 
-    int positionBlocSupriseX = -1;
-    int positionBlocSupriseY = -1;
-    genererCoordonneesBlocSurprise();
-    bool blocSurpriseActive = false;
-
-
     int Oiseau1_X = 0;
     int Oiseau1_Y = 0;
     int Oiseau2_X = COLONNES - 1;
@@ -136,7 +133,6 @@ void afficherSNOOPY()
     int Oiseau4_Y = LIGNES - 1;
 
     bool oiseauxACapture[4] = { false, false, false, false };
-
     while (jeuEnCours) {
         for (int i = 0; i < LIGNES; i++)
         {
@@ -146,16 +142,34 @@ void afficherSNOOPY()
             }
         }
         matrice[PositionInitY][PositionInitX] = SNOOPY;
-        PoserBloc(matrice, 8,4);
-        PoserBloc(matrice, 9,4);
-        PoserBloc(matrice, 10,4);
-        PoserBloc(matrice, 11,4);
-        PoserBloc(matrice, 12,4);
-        PoserBloc(matrice, 8,6);
-        PoserBloc(matrice, 9,6);
-        PoserBloc(matrice, 10,6);
-        PoserBloc(matrice, 11,6);
-        PoserBloc(matrice, 12,6);
+
+
+        for (int i = 8; i <= 12; ++i) {
+            PoserBloc(matrice, i, 3);
+            PoserBloc(matrice, i, 7);
+        }
+        for (int i = 1; i <= 4; ++i) {
+            PoserBloc(matrice, i, 5);
+        }
+        for (int i = 16; i <= 18; ++i) {
+            PoserBloc(matrice, i, 5);
+        }
+        for (int i = 4; i <= 6; ++i) {
+            PoserBloc(matrice, 6, i);
+            PoserBloc(matrice, 14, i);
+        }
+        for (int i = 1; i <= 4; ++i) {
+            PoserBloc(matrice, i, 5);
+        }
+        for (int i = 0; i <= 2; ++i) {
+            PoserBloc(matrice, 10, i);
+        }
+        for (int i = 8; i <= 9; ++i) {
+            PoserBloc(matrice, 10, i);
+        }
+        PoserBloc(matrice,9,5);
+        PoserBloc(matrice,11,5);
+
 
         if (PositionInitX == positionBalleX && PositionInitY == positionBalleY)
         {
@@ -194,15 +208,10 @@ void afficherSNOOPY()
 
         matrice[positionBalleY][positionBalleX] = 'O' ;
 
-        if (PositionInitX == positionBlocSurpriseX && PositionInitY == positionBlocSurpriseY && !blocSurpriseActive) {
-            blocSurpriseActive = true;
-            afficherBlocSurprise();
-        }
-
         creationMatrice(matrice, tempsRestant);
 
         printf("\n\n(Appuyer sur entree pour lancer le jeu et sur m pour la stopper)"
-               "\n(Appuyer sur r pour acceder au regles du jeu)\n");
+               "\n(Appuyer sur r pour acceder au regles du jeu)\n(Appuyer sur T pour voir les touches)\n");
 
         int nombreOiseauxCaptures = 0;
         for (int i = 0; i < 4; i++) {
@@ -219,11 +228,34 @@ void afficherSNOOPY()
         {
             Color(7,0);
             scorePartie = ScorePartie(tempsRestant);
-            printf("\n\n\tVictoire ! Vous avez reussi a terminer le niveau et capture les oiseaux !");
-            printf("\n\tScore de la partie : %d", scorePartie);
-            Color(4,0);
-            printf("\n\n\t(Appuyer sur echap pour revenir au Menu Principal)\n");
+            scoreTotal += scorePartie;
+            system("cls");
+            Color(7,0);
+            printf("\n\n\tVictoire ! Vous avez reussi a terminer le premier niveau !");
+            ScoreMenu();
+            Color(2,0);
+            printf("\nChargement du niveau suivant ...");
+            Color(5,0);
+            printf("                                                                                                                                                      \n"
+                   "                   ,(%&&&@@&(*.      .......      ..,,,,,,,    .,/((((/,.            ./&@&@&&&&@@%,           ...             /&@(        .&&@@%*     \n"
+                   "               ,&&&(.        *#&&&&&((((/(&&    %&#///**%&,/&&&#/.    .*#&&&(     ,&&%,   ..     .(&&&&&&&%%##(((##%&&&&#*&&&%/ %&.      .&&..  /%&@( \n"
+                   "             ,&&*.               #&%.     #&*   /&(.    &&&%..              #&% .%&*                .#&&.               ,%& .   .&&.    .&&,    ,&&, *\n"
+                   "            ,&&.   .#&&&&&&&%/ .%&&%.     .&&,  .&%    ,&@*     *#&&@&%*     ,&&&&..   *%&&&&&&&#.    %&,   ./#%&&%(,      %,    ,@&.  .&&..   /&&    \n"
+                   "            (&(   ,&@.      .#&&&%&%.      *&&.  &&    /&(    (@%*    .%@#    /&&(   .%&(      .&&,    &*   ,&&.   ,#&&,    (*    *&# .&&..   #&#     \n"
+                   "            (&(   .&&/         .,*&%   .    /&%  #@.   #&.   /&%        #&/   .&&,   /&%        *&%    %/   ,&&.     .&@,   .&*    (&&&&..  .&@*      \n"
+                   "            .&&.     (&&@&%(,    /@%.  *&.   /&& #&*   %#.  .%&*        ,@%    &%.   %&/         &&.   /(   ,&&.      (&(   .&&*    (&&.   *&&,       \n"
+                   "              %&%.         ,/#&&%(&%.  *&&.   /&%#&*   %(   .&&.         &&    /#    %&,         #&.   .#   .&&.     .&&,   ,&@&*    /    /&&.        \n"
+                   "                /&@&#*.         /&&%   *&@&.   /&&&/   %(   .&&          %&.   ,#    %&.         (&*    #.  .&&,  .(&&%.    &&,&&,.      (&%          \n"
+                   "                     ,#&&&&#.    *&#   ,&&&&.   ,&&,   %(   .&&.         #&.   .#    #&*         (&*   .%.   /%%%#/. .    *&&* .&&     .#@#           \n"
+                   "            .&&&*          #&/    &#   ,&&.&@,   ,&.   %#    #&*         %&    *%.   /&#         %&.   ,&,             .(&&(   ,&&    .%&(            \n"
+                   "           .&&.,%&&#*.  .*%&&,   *&(   .&&..&&,        %&.   ,&&.       (&#    #&*    (&#       %&/    #&,   *###%%&&&&&(.    /&%    ,&&*             \n"
+                   "          ,&&.      ,#%%%*      *&&*   .&&,  &&,       %&(     %&&/..,%&&*    ,&&&.     %&&@&&&&( .   *&&,   /@%             #@(    ,&&*              \n"
+                   "          /&&*               ./&&&&.   .%&*  .&&.      #&&%      ..**,.      /&&*%&(                ,#&@&,   *@&.           %&*    ,&&.               \n"
+                   "            ,%@&&%#(/**//(#&&&%,,&&((###&@(   .&&,   ..#@#&&#.            ,(&&(   .&&&(,.       .*#&&%.&&.   .@&,         ,&@&%/..,&&,                \n"
+                   "                   ,////*,       .....          &&&&&&&&%/  *%&&@&%##%&&@&&(          /%&&&&&&&&&#*   .&&@&&&&&&/              (%&&&*            ");
             Color(3,0);
+            sleep(3);
+            afficherSNOOPY_niveau2();
             jeuEnPause = true;
             break;
 
@@ -233,21 +265,24 @@ void afficherSNOOPY()
 
             matrice[PositionInitY][PositionInitX] = ' ';
 
+            int nextPositionX = PositionInitX;
+            int nextPositionY = PositionInitY;
+
             if (deplacement == 'q' && PositionInitX > 0)
             {
-                PositionInitX--;
+                nextPositionX = PositionInitX - 1;
             }
             else if (deplacement == 'd' && PositionInitX < COLONNES - 1)
             {
-                PositionInitX++;
+                nextPositionX = PositionInitX + 1;
             }
             else if (deplacement == 'z' && PositionInitY > 0)
             {
-                PositionInitY--;
+                nextPositionY = PositionInitY - 1;
             }
             else if (deplacement == 's' && PositionInitY < LIGNES - 1)
             {
-                PositionInitY++;
+                nextPositionY = PositionInitY + 1;
             }
             else if (deplacement == 'm')
             {
@@ -256,6 +291,32 @@ void afficherSNOOPY()
             else if (deplacement == 'r')
             {
                 VoirReglesInGame();
+            }
+            else if (deplacement == 'Q')
+            {
+                Color(2,0);
+                printf("\n\n\nVous avez decide de revenir au menu principal! (Appuyer sur Echap)");
+                Color(3,0);
+                RevenirMenuPrincipale();
+                Color(4,0);
+                centrerTexte(0);
+                printf("(Appuyer sur echap pour revenir au menu principal)");
+                Color(3,0);
+                break;
+            }
+            else if (deplacement == 'T')
+            {
+                MenuTouche();
+            }
+            else if (deplacement == 'S')
+            {
+                printf("\n");
+                InformationsPartie partie;
+                sauvegarderPartie(&partie);
+            }
+            if (!(matrice[nextPositionY][nextPositionX] == '#')) {
+                PositionInitX = nextPositionX;
+                PositionInitY = nextPositionY;
             }
 
             if (!oiseauxACapture[0] && PositionInitX == Oiseau1_X && PositionInitY == Oiseau1_Y)
@@ -274,7 +335,6 @@ void afficherSNOOPY()
             {
                 oiseauxACapture[3] = true;
             }
-           
         }
         Sleep(100);
     }
@@ -282,7 +342,874 @@ void afficherSNOOPY()
     jeuEnCours = true;
     jeuEnPause = false;
     reglesInGame = false;
-    
+}
+
+void afficherSNOOPY_niveau2()
+{
+    ViesRestantes = 3;
+    jeuEnCours = true;
+    char matrice[LIGNES][COLONNES];
+    int tempsRestant = 120;
+    int PositionInitX = COLONNES / 2;
+    int PositionInitY = LIGNES / 2;
+    _beginthread(afficherHorloge, 0, &tempsRestant);
+    int positionBalleX = rand() % (COLONNES - 2) + 1;
+    int positionBalleY = rand() % (LIGNES - 2) + 1;
+    int directionBalleX = 1;
+    int directionBalleY = 1;
+
+    int Oiseau1_X = 0;
+    int Oiseau1_Y = 0;
+    int Oiseau2_X = COLONNES - 1;
+    int Oiseau2_Y = 0;
+    int Oiseau3_X = 0;
+    int Oiseau3_Y = LIGNES - 1;
+    int Oiseau4_X = COLONNES - 1;
+    int Oiseau4_Y = LIGNES - 1;
+
+    bool oiseauxACapture[4] = { false, false, false, false };
+
+    while (jeuEnCours) {
+        for (int i = 0; i < LIGNES; i++)
+        {
+            for (int j = 0; j < COLONNES; j++)
+            {
+                matrice[i][j] = ' ';
+            }
+        }
+        matrice[PositionInitY][PositionInitX] = SNOOPY;
+        for (int i = 3; i < 9; ++i) {
+            PoserBloc(matrice, 1, i);
+        }
+
+        for (int i = 0; i < 18; ++i) {
+            PoserBloc(matrice, i, 1);
+        }
+        for (int i = 1; i < 16; ++i) {
+            PoserBloc(matrice, i, 3);
+        }
+        for (int i = 1; i < 18; ++i) {
+            PoserBloc(matrice, i, 8);
+        }
+        for (int i = 1; i < 9; ++i) {
+            PoserBloc(matrice, 18, i);
+        }
+        for (int i = 3; i <= 6; ++i) {
+            PoserBloc(matrice, 15, i);
+        }
+        for (int i = 4; i <= 15; ++i) {
+            PoserBloc(matrice, i, 6);
+        }
+
+        if (PositionInitX == positionBalleX && PositionInitY == positionBalleY)
+        {
+            ViesRestantes--;
+            if (ViesRestantes > 0)
+            {
+                PositionInitX = COLONNES / 2;
+                PositionInitY = LIGNES / 2;
+            } else {
+                Color(4,0);
+                printf("\n\n\tGame Over : Appuyez sur echap pour revenir au menu principal");
+                Color(3,0);
+                jeuEnCours = false;
+            }
+        }
+        if (!oiseauxACapture[0])
+            matrice[Oiseau1_Y][Oiseau1_X] = OISEAUX;
+        if (!oiseauxACapture[1])
+            matrice[Oiseau2_Y][Oiseau2_X] = OISEAUX;
+        if (!oiseauxACapture[2])
+            matrice[Oiseau3_Y][Oiseau3_X] = OISEAUX;
+        if (!oiseauxACapture[3])
+            matrice[Oiseau4_Y][Oiseau4_X] = OISEAUX;
+
+        positionBalleX += directionBalleX;
+        positionBalleY += directionBalleY;
+
+        if (positionBalleX <= 0 || positionBalleX >= COLONNES-1 )
+        {
+            directionBalleX = -directionBalleX;
+        }
+        if (positionBalleY <= 0 || positionBalleY >= LIGNES-1)
+        {
+            directionBalleY = -directionBalleY;
+        }
+
+        matrice[positionBalleY][positionBalleX] = 'O' ;
+
+        creationMatrice(matrice, tempsRestant);
+
+        printf("\n\n(Appuyer sur entree pour lancer le jeu et sur m pour la stopper)"
+               "\n(Appuyer sur r pour acceder au regles du jeu)\n(Appuyer sur T pour voir les touches)\n");
+
+        int nombreOiseauxCaptures = 0;
+        for (int i = 0; i < 4; i++) {
+            if (oiseauxACapture[i]) {
+                nombreOiseauxCaptures++;
+            }
+        }
+        Color(6,0);
+        printf("\nNombre d'oiseaux captures : ");
+        Color(7,0);
+        printf("%d", nombreOiseauxCaptures);
+        Color(3,0);
+        if (nombreOiseauxCaptures == 4)
+        {
+            Color(7,0);
+            scorePartie = ScorePartie(tempsRestant);
+            scoreTotal += scorePartie;
+            system("cls");
+            Color(7,0);
+            printf("\n\n\tVictoire ! Vous avez reussi a terminer le second niveau !");
+            ScoreMenu();
+            Color(2,0);
+            printf("\nChargement du niveau suivant ...\n");
+            Color(5,0);
+            printf("                                                                                                                                                      \n"
+                   "                   ,(%&&&@@&(*.      .......      ..,,,,,,,    .,/((((/,.            ./&@&@&&&&@@%,           ...             /&@(        .&&@@%*     \n"
+                   "               ,&&&(.        *#&&&&&((((/(&&    %&#///**%&,/&&&#/.    .*#&&&(     ,&&%,   ..     .(&&&&&&&%%##(((##%&&&&#*&&&%/ %&.      .&&..  /%&@( \n"
+                   "             ,&&*.               #&%.     #&*   /&(.    &&&%..              #&% .%&*                .#&&.               ,%& .   .&&.    .&&,    ,&&, *\n"
+                   "            ,&&.   .#&&&&&&&%/ .%&&%.     .&&,  .&%    ,&@*     *#&&@&%*     ,&&&&..   *%&&&&&&&#.    %&,   ./#%&&%(,      %,    ,@&.  .&&..   /&&    \n"
+                   "            (&(   ,&@.      .#&&&%&%.      *&&.  &&    /&(    (@%*    .%@#    /&&(   .%&(      .&&,    &*   ,&&.   ,#&&,    (*    *&# .&&..   #&#     \n"
+                   "            (&(   .&&/         .,*&%   .    /&%  #@.   #&.   /&%        #&/   .&&,   /&%        *&%    %/   ,&&.     .&@,   .&*    (&&&&..  .&@*      \n"
+                   "            .&&.     (&&@&%(,    /@%.  *&.   /&& #&*   %#.  .%&*        ,@%    &%.   %&/         &&.   /(   ,&&.      (&(   .&&*    (&&.   *&&,       \n"
+                   "              %&%.         ,/#&&%(&%.  *&&.   /&%#&*   %(   .&&.         &&    /#    %&,         #&.   .#   .&&.     .&&,   ,&@&*    /    /&&.        \n"
+                   "                /&@&#*.         /&&%   *&@&.   /&&&/   %(   .&&          %&.   ,#    %&.         (&*    #.  .&&,  .(&&%.    &&,&&,.      (&%          \n"
+                   "                     ,#&&&&#.    *&#   ,&&&&.   ,&&,   %(   .&&.         #&.   .#    #&*         (&*   .%.   /%%%#/. .    *&&* .&&     .#@#           \n"
+                   "            .&&&*          #&/    &#   ,&&.&@,   ,&.   %#    #&*         %&    *%.   /&#         %&.   ,&,             .(&&(   ,&&    .%&(            \n"
+                   "           .&&.,%&&#*.  .*%&&,   *&(   .&&..&&,        %&.   ,&&.       (&#    #&*    (&#       %&/    #&,   *###%%&&&&&(.    /&%    ,&&*             \n"
+                   "          ,&&.      ,#%%%*      *&&*   .&&,  &&,       %&(     %&&/..,%&&*    ,&&&.     %&&@&&&&( .   *&&,   /@%             #@(    ,&&*              \n"
+                   "          /&&*               ./&&&&.   .%&*  .&&.      #&&%      ..**,.      /&&*%&(                ,#&@&,   *@&.           %&*    ,&&.               \n"
+                   "            ,%@&&%#(/**//(#&&&%,,&&((###&@(   .&&,   ..#@#&&#.            ,(&&(   .&&&(,.       .*#&&%.&&.   .@&,         ,&@&%/..,&&,                \n"
+                   "                   ,////*,       .....          &&&&&&&&%/  *%&&@&%##%&&@&&(          /%&&&&&&&&&#*   .&&@&&&&&&/              (%&&&*            ");
+            Color(3,0);
+            sleep(3);
+            afficherSNOOPY_niveau3();
+            jeuEnPause = true;
+            break;
+        }
+        if (_kbhit()) {
+            char deplacement = _getch();
+
+            matrice[PositionInitY][PositionInitX] = ' ';
+
+            int nextPositionX = PositionInitX;
+            int nextPositionY = PositionInitY;
+
+            if (deplacement == 'q' && PositionInitX > 0)
+            {
+                nextPositionX = PositionInitX - 1;
+            }
+            else if (deplacement == 'd' && PositionInitX < COLONNES - 1)
+            {
+                nextPositionX = PositionInitX + 1;
+            }
+            else if (deplacement == 'z' && PositionInitY > 0)
+            {
+                nextPositionY = PositionInitY - 1;
+            }
+            else if (deplacement == 's' && PositionInitY < LIGNES - 1)
+            {
+                nextPositionY = PositionInitY + 1;
+            }
+            else if (deplacement == 'm')
+            {
+                MettreEnPause();
+            }
+            else if (deplacement == 'r')
+            {
+                VoirReglesInGame();
+            }
+            else if (deplacement == 'Q')
+            {
+                Color(2,0);
+                printf("\n\n\nVous avez decide de revenir au menu principal! (Appuyer sur Echap)");
+                Color(3,0);
+                RevenirMenuPrincipale();
+                Color(4,0);
+                centrerTexte(0);
+                printf("(Appuyer sur echap pour revenir au menu principal)");
+                Color(3,0);
+                break;
+            }
+            else if (deplacement == 'T')
+            {
+                MenuTouche();
+            }
+            else if (deplacement == 'S')
+            {
+                printf("\n");
+                InformationsPartie partie;
+                sauvegarderPartie(&partie);
+            }
+            if (!(matrice[nextPositionY][nextPositionX] == '#')) {
+                PositionInitX = nextPositionX;
+                PositionInitY = nextPositionY;
+            }
+
+            if (!oiseauxACapture[0] && PositionInitX == Oiseau1_X && PositionInitY == Oiseau1_Y)
+            {
+                oiseauxACapture[0] = true;
+            }
+            if (!oiseauxACapture[1] && PositionInitX == Oiseau2_X && PositionInitY == Oiseau2_Y)
+            {
+                oiseauxACapture[1] = true;
+            }
+            if (!oiseauxACapture[2] && PositionInitX == Oiseau3_X && PositionInitY == Oiseau3_Y)
+            {
+                oiseauxACapture[2] = true;
+            }
+            if (!oiseauxACapture[3] && PositionInitX == Oiseau4_X && PositionInitY == Oiseau4_Y)
+            {
+                oiseauxACapture[3] = true;
+            }
+        }
+        Sleep(100);
+    }
+    ViesRestantes = 3;
+    jeuEnCours = true;
+    jeuEnPause = false;
+    reglesInGame = false;
+}
+
+void afficherSNOOPY_niveau3()
+{
+    ViesRestantes = 3;
+    jeuEnCours = true;
+    char matrice[LIGNES][COLONNES];
+    int tempsRestant = 120;
+    int PositionInitX = COLONNES / 2;
+    int PositionInitY = LIGNES / 2;
+    _beginthread(afficherHorloge, 0, &tempsRestant);
+    int positionBalleX = rand() % (COLONNES - 2) + 1;
+    int positionBalleY = rand() % (LIGNES - 2) + 1;
+    int directionBalleX = 1;
+    int directionBalleY = 1;
+    int positionBalle2X = rand() % (COLONNES - 2) + 1;
+    int positionBalle2Y = rand() % (LIGNES - 2) + 1;
+    int directionBalle2X = 1;
+    int directionBalle2Y = 1;
+
+
+    int Oiseau1_X = 0;
+    int Oiseau1_Y = 0;
+    int Oiseau2_X = COLONNES - 1;
+    int Oiseau2_Y = 0;
+    int Oiseau3_X = 0;
+    int Oiseau3_Y = LIGNES - 1;
+    int Oiseau4_X = COLONNES - 1;
+    int Oiseau4_Y = LIGNES - 1;
+    bool oiseauxACapture[4] = { false, false, false, false };
+
+    while (jeuEnCours) {
+        for (int i = 0; i < LIGNES; i++)
+        {
+            for (int j = 0; j < COLONNES; j++)
+            {
+                matrice[i][j] = ' ';
+            }
+        }
+        matrice[PositionInitY][PositionInitX] = SNOOPY;
+        for (int i = 3; i < 9; ++i) {
+            PoserBloc(matrice, 1, i);
+        }
+
+        for (int i = 0; i < 18; ++i) {
+            PoserBloc(matrice, i, 1);
+        }
+        for (int i = 1; i < 16; ++i) {
+            PoserBloc(matrice, i, 3);
+        }
+        for (int i = 1; i < 18; ++i) {
+            PoserBloc(matrice, i, 8);
+        }
+        for (int i = 1; i < 9; ++i) {
+            PoserBloc(matrice, 18, i);
+        }
+        for (int i = 3; i <= 6; ++i) {
+            PoserBloc(matrice, 15, i);
+        }
+        for (int i = 4; i <= 15; ++i) {
+            PoserBloc(matrice, i, 6);
+        }
+
+
+        if (PositionInitX == positionBalleX && PositionInitY == positionBalleY)
+        {
+            ViesRestantes--;
+            if (ViesRestantes > 0)
+            {
+                PositionInitX = COLONNES / 2;
+                PositionInitY = LIGNES / 2;
+            } else {
+                Color(4,0);
+                printf("\n\n\tGame Over : Appuyez sur echap pour revenir au menu principal");
+                Color(3,0);
+                jeuEnCours = false;
+            }
+        }
+        if (PositionInitX == positionBalle2X && PositionInitY == positionBalle2Y)
+        {
+            ViesRestantes--;
+            if (ViesRestantes > 0)
+            {
+                PositionInitX = COLONNES / 2;
+                PositionInitY = LIGNES / 2;
+            } else {
+                Color(4,0);
+                printf("\n\n\tGame Over : Appuyez sur echap pour revenir au menu principal");
+                Color(3,0);
+                jeuEnCours = false;
+            }
+        }
+        if (!oiseauxACapture[0])
+            matrice[Oiseau1_Y][Oiseau1_X] = OISEAUX;
+        if (!oiseauxACapture[1])
+            matrice[Oiseau2_Y][Oiseau2_X] = OISEAUX;
+        if (!oiseauxACapture[2])
+            matrice[Oiseau3_Y][Oiseau3_X] = OISEAUX;
+        if (!oiseauxACapture[3])
+            matrice[Oiseau4_Y][Oiseau4_X] = OISEAUX;
+
+        positionBalleX += directionBalleX;
+        positionBalleY += directionBalleY;
+
+        if (positionBalleX <= 0 || positionBalleX >= COLONNES-1 )
+        {
+            directionBalleX = -directionBalleX;
+        }
+        if (positionBalleY <= 0 || positionBalleY >= LIGNES-1)
+        {
+            directionBalleY = -directionBalleY;
+        }
+        positionBalle2X += directionBalle2X;
+        positionBalle2Y += directionBalle2Y;
+
+        if (positionBalle2X <= 0 || positionBalle2X >= COLONNES - 1)
+        {
+            directionBalle2X = -directionBalle2X;
+        }
+        if (positionBalle2Y <= 0 || positionBalle2Y >= LIGNES - 1)
+        {
+            directionBalle2Y = -directionBalle2Y;
+        }
+
+        matrice[positionBalle2Y][positionBalle2X] = 'O';
+
+        matrice[positionBalleY][positionBalleX] = 'O' ;
+
+        creationMatrice(matrice, tempsRestant);
+
+        printf("\n\n(Appuyer sur entree pour lancer le jeu et sur m pour la stopper)"
+               "\n(Appuyer sur r pour acceder au regles du jeu)\n(Appuyer sur T pour voir les touches)\n");
+
+        int nombreOiseauxCaptures = 0;
+        for (int i = 0; i < 4; i++) {
+            if (oiseauxACapture[i]) {
+                nombreOiseauxCaptures++;
+            }
+        }
+        Color(6,0);
+        printf("\nNombre d'oiseaux captures : ");
+        Color(7,0);
+        printf("%d", nombreOiseauxCaptures);
+        Color(3,0);
+        if (nombreOiseauxCaptures == 4)
+        {
+            Color(7,0);
+            scorePartie = ScorePartie(tempsRestant);
+            scoreTotal += scorePartie;
+            system("cls");
+            Color(7,0);
+            printf("\n\n\tVictoire ! Vous avez reussi a terminer le jeu !");
+            ScoreMenu();
+            Color(5,0);
+            printf("                                                                                                                                                      \n"
+                   "                   ,(%&&&@@&(*.      .......      ..,,,,,,,    .,/((((/,.            ./&@&@&&&&@@%,           ...             /&@(        .&&@@%*     \n"
+                   "               ,&&&(.        *#&&&&&((((/(&&    %&#///**%&,/&&&#/.    .*#&&&(     ,&&%,   ..     .(&&&&&&&%%##(((##%&&&&#*&&&%/ %&.      .&&..  /%&@( \n"
+                   "             ,&&*.               #&%.     #&*   /&(.    &&&%..              #&% .%&*                .#&&.               ,%& .   .&&.    .&&,    ,&&, *\n"
+                   "            ,&&.   .#&&&&&&&%/ .%&&%.     .&&,  .&%    ,&@*     *#&&@&%*     ,&&&&..   *%&&&&&&&#.    %&,   ./#%&&%(,      %,    ,@&.  .&&..   /&&    \n"
+                   "            (&(   ,&@.      .#&&&%&%.      *&&.  &&    /&(    (@%*    .%@#    /&&(   .%&(      .&&,    &*   ,&&.   ,#&&,    (*    *&# .&&..   #&#     \n"
+                   "            (&(   .&&/         .,*&%   .    /&%  #@.   #&.   /&%        #&/   .&&,   /&%        *&%    %/   ,&&.     .&@,   .&*    (&&&&..  .&@*      \n"
+                   "            .&&.     (&&@&%(,    /@%.  *&.   /&& #&*   %#.  .%&*        ,@%    &%.   %&/         &&.   /(   ,&&.      (&(   .&&*    (&&.   *&&,       \n"
+                   "              %&%.         ,/#&&%(&%.  *&&.   /&%#&*   %(   .&&.         &&    /#    %&,         #&.   .#   .&&.     .&&,   ,&@&*    /    /&&.        \n"
+                   "                /&@&#*.         /&&%   *&@&.   /&&&/   %(   .&&          %&.   ,#    %&.         (&*    #.  .&&,  .(&&%.    &&,&&,.      (&%          \n"
+                   "                     ,#&&&&#.    *&#   ,&&&&.   ,&&,   %(   .&&.         #&.   .#    #&*         (&*   .%.   /%%%#/. .    *&&* .&&     .#@#           \n"
+                   "            .&&&*          #&/    &#   ,&&.&@,   ,&.   %#    #&*         %&    *%.   /&#         %&.   ,&,             .(&&(   ,&&    .%&(            \n"
+                   "           .&&.,%&&#*.  .*%&&,   *&(   .&&..&&,        %&.   ,&&.       (&#    #&*    (&#       %&/    #&,   *###%%&&&&&(.    /&%    ,&&*             \n"
+                   "          ,&&.      ,#%%%*      *&&*   .&&,  &&,       %&(     %&&/..,%&&*    ,&&&.     %&&@&&&&( .   *&&,   /@%             #@(    ,&&*              \n"
+                   "          /&&*               ./&&&&.   .%&*  .&&.      #&&%      ..**,.      /&&*%&(                ,#&@&,   *@&.           %&*    ,&&.               \n"
+                   "            ,%@&&%#(/**//(#&&&%,,&&((###&@(   .&&,   ..#@#&&#.            ,(&&(   .&&&(,.       .*#&&%.&&.   .@&,         ,&@&%/..,&&,                \n"
+                   "                   ,////*,       .....          &&&&&&&&%/  *%&&@&%##%&&@&&(          /%&&&&&&&&&#*   .&&@&&&&&&/              (%&&&*            ");
+            Color(4,0);
+            printf("\n(Appuyer sur echap pour revenir au menu principal)");
+            Color(3,0);
+            sleep(3);
+            jeuEnPause = true;
+            break;
+
+        }
+        if (_kbhit()) {
+            char deplacement = _getch();
+
+            matrice[PositionInitY][PositionInitX] = ' ';
+
+            int nextPositionX = PositionInitX;
+            int nextPositionY = PositionInitY;
+
+            if (deplacement == 'q' && PositionInitX > 0)
+            {
+                nextPositionX = PositionInitX - 1;
+            }
+            else if (deplacement == 'd' && PositionInitX < COLONNES - 1)
+            {
+                nextPositionX = PositionInitX + 1;
+            }
+            else if (deplacement == 'z' && PositionInitY > 0)
+            {
+                nextPositionY = PositionInitY - 1;
+            }
+            else if (deplacement == 's' && PositionInitY < LIGNES - 1)
+            {
+                nextPositionY = PositionInitY + 1;
+            }
+            else if (deplacement == 'm')
+            {
+                MettreEnPause();
+            }
+            else if (deplacement == 'r')
+            {
+                VoirReglesInGame();
+            }
+            else if (deplacement == 'Q')
+            {
+                Color(2,0);
+                printf("\n\n\nVous avez decide de revenir au menu principal! (Appuyer sur Echap)");
+                Color(3,0);
+                RevenirMenuPrincipale();
+                Color(4,0);
+                centrerTexte(0);
+                printf("(Appuyer sur echap pour revenir au menu principal)");
+                Color(3,0);
+                break;
+            }
+            else if (deplacement == 'T')
+            {
+                MenuTouche();
+            }
+            else if (deplacement == 'S')
+            {
+                printf("\n");
+                InformationsPartie partie;
+                sauvegarderPartie(&partie);
+            }
+            if (!(matrice[nextPositionY][nextPositionX] == '#')) {
+                PositionInitX = nextPositionX;
+                PositionInitY = nextPositionY;
+            }
+
+            if (!oiseauxACapture[0] && PositionInitX == Oiseau1_X && PositionInitY == Oiseau1_Y)
+            {
+                oiseauxACapture[0] = true;
+            }
+            if (!oiseauxACapture[1] && PositionInitX == Oiseau2_X && PositionInitY == Oiseau2_Y)
+            {
+                oiseauxACapture[1] = true;
+            }
+            if (!oiseauxACapture[2] && PositionInitX == Oiseau3_X && PositionInitY == Oiseau3_Y)
+            {
+                oiseauxACapture[2] = true;
+            }
+            if (!oiseauxACapture[3] && PositionInitX == Oiseau4_X && PositionInitY == Oiseau4_Y)
+            {
+                oiseauxACapture[3] = true;
+            }
+        }
+        Sleep(100);
+    }
+    ViesRestantes = 3;
+    jeuEnCours = true;
+    jeuEnPause = false;
+    reglesInGame = false;
+}
+
+void afficherSNOOPY_niveau4()
+{
+    ViesRestantes = 3;
+    jeuEnCours = true;
+    char matrice[LIGNES][COLONNES];
+    int tempsRestant = 120;
+    int PositionInitX = COLONNES / 2;
+    int PositionInitY = LIGNES / 2;
+    _beginthread(afficherHorloge, 0, &tempsRestant);
+    int positionBalleX = rand() % (COLONNES - 2) + 1;
+    int positionBalleY = rand() % (LIGNES - 2) + 1;
+    int directionBalleX = 1;
+    int directionBalleY = 1;
+    int positionBalle2X = rand() % (COLONNES - 2) + 1;
+    int positionBalle2Y = rand() % (LIGNES - 2) + 1;
+    int directionBalle2X = 1;
+    int directionBalle2Y = 1;
+    int positionBalle3X = rand() % (COLONNES - 2) + 1;
+    int positionBalle3Y = rand() % (LIGNES - 2) + 1;
+    int directionBalle3X = 1;
+    int directionBalle3Y = 1;
+    int positionBalle4X = rand() % (COLONNES - 2) + 1;
+    int positionBalle4Y = rand() % (LIGNES - 2) + 1;
+    int directionBalle4X = 1;
+    int directionBalle4Y = 1;
+    int positionBalle5X = rand() % (COLONNES - 2) + 1;
+    int positionBalle5Y = rand() % (LIGNES - 2) + 1;
+    int directionBalle5X = 1;
+    int directionBalle5Y = 1;
+    int positionBalle6X = rand() % (COLONNES - 2) + 1;
+    int positionBalle6Y = rand() % (LIGNES - 2) + 1;
+    int directionBalle6X = 1;
+    int directionBalle6Y = 1;
+
+    int Oiseau1_X = 0;
+    int Oiseau1_Y = 0;
+    int Oiseau2_X = COLONNES - 1;
+    int Oiseau2_Y = 0;
+    int Oiseau3_X = 0;
+    int Oiseau3_Y = LIGNES - 1;
+    int Oiseau4_X = COLONNES - 1;
+    int Oiseau4_Y = LIGNES - 1;
+
+    bool oiseauxACapture[4] = { false, false, false, false };
+
+    while (jeuEnCours) {
+        for (int i = 0; i < LIGNES; i++)
+        {
+            for (int j = 0; j < COLONNES; j++)
+            {
+                matrice[i][j] = ' ';
+            }
+        }
+        matrice[PositionInitY][PositionInitX] = SNOOPY;
+        for (int i = 8; i <= 12; ++i) {
+            PoserBloc(matrice, i, 3);
+            PoserBloc(matrice, i, 7);
+        }
+        for (int i = 1; i <= 4; ++i) {
+            PoserBloc(matrice, i, 5);
+        }
+        for (int i = 16; i <= 18; ++i) {
+            PoserBloc(matrice, i, 5);
+        }
+        for (int i = 4; i <= 6; ++i) {
+            PoserBloc(matrice, 6, i);
+            PoserBloc(matrice, 14, i);
+        }
+
+        if (PositionInitX == positionBalleX && PositionInitY == positionBalleY)
+        {
+            ViesRestantes--;
+            if (ViesRestantes > 0)
+            {
+                PositionInitX = COLONNES / 2;
+                PositionInitY = LIGNES / 2;
+            } else {
+                Color(4,0);
+                printf("\n\n\tGame Over : Appuyez sur echap pour revenir au menu principal");
+                Color(3,0);
+                jeuEnCours = false;
+            }
+        }
+        if (PositionInitX == positionBalle2X && PositionInitY == positionBalle2Y)
+        {
+            ViesRestantes--;
+            if (ViesRestantes > 0)
+            {
+                PositionInitX = COLONNES / 2;
+                PositionInitY = LIGNES / 2;
+            } else {
+                Color(4,0);
+                printf("\n\n\tGame Over : Appuyez sur echap pour revenir au menu principal");
+                Color(3,0);
+                jeuEnCours = false;
+            }
+        }
+        if (PositionInitX == positionBalle3X && PositionInitY == positionBalle3Y)
+        {
+            ViesRestantes--;
+            if (ViesRestantes > 0)
+            {
+                PositionInitX = COLONNES / 2;
+                PositionInitY = LIGNES / 2;
+            } else {
+                Color(4,0);
+                printf("\n\n\tGame Over : Appuyez sur echap pour revenir au menu principal");
+                Color(3,0);
+                jeuEnCours = false;
+            }
+        }
+        if (PositionInitX == positionBalle4X && PositionInitY == positionBalle4Y)
+        {
+            ViesRestantes--;
+            if (ViesRestantes > 0)
+            {
+                PositionInitX = COLONNES / 2;
+                PositionInitY = LIGNES / 2;
+            }
+            else
+            {
+                Color(4, 0);
+                printf("\n\n\tGame Over : Appuyez sur echap pour revenir au menu principal");
+                Color(3, 0);
+                jeuEnCours = false;
+            }
+        }
+        if (PositionInitX == positionBalle5X && PositionInitY == positionBalle5Y)
+        {
+            ViesRestantes--;
+            if (ViesRestantes > 0)
+            {
+                PositionInitX = COLONNES / 2;
+                PositionInitY = LIGNES / 2;
+            }
+            else
+            {
+                Color(4, 0);
+                printf("\n\n\tGame Over : Appuyez sur echap pour revenir au menu principal");
+                Color(3, 0);
+                jeuEnCours = false;
+            }
+        }
+        if (PositionInitX == positionBalle6X && PositionInitY == positionBalle6Y)
+        {
+            ViesRestantes--;
+            if (ViesRestantes > 0)
+            {
+                PositionInitX = COLONNES / 2;
+                PositionInitY = LIGNES / 2;
+            }
+            else
+            {
+                Color(4, 0);
+                printf("\n\n\tGame Over : Appuyez sur echap pour revenir au menu principal");
+                Color(3, 0);
+                jeuEnCours = false;
+            }
+        }
+        if (!oiseauxACapture[0])
+            matrice[Oiseau1_Y][Oiseau1_X] = OISEAUX;
+        if (!oiseauxACapture[1])
+            matrice[Oiseau2_Y][Oiseau2_X] = OISEAUX;
+        if (!oiseauxACapture[2])
+            matrice[Oiseau3_Y][Oiseau3_X] = OISEAUX;
+        if (!oiseauxACapture[3])
+            matrice[Oiseau4_Y][Oiseau4_X] = OISEAUX;
+
+        positionBalleX += directionBalleX;
+        positionBalleY += directionBalleY;
+        positionBalle4X += directionBalle4X;
+        positionBalle4Y += directionBalle4Y;
+
+        positionBalle5X += directionBalle5X;
+        positionBalle5Y += directionBalle5Y;
+
+        positionBalle6X += directionBalle6X;
+        positionBalle6Y += directionBalle6Y;
+
+        if (positionBalleX <= 0 || positionBalleX >= COLONNES-1 )
+        {
+            directionBalleX = -directionBalleX;
+        }
+        if (positionBalleY <= 0 || positionBalleY >= LIGNES-1)
+        {
+            directionBalleY = -directionBalleY;
+        }
+        positionBalle2X += directionBalle2X;
+        positionBalle2Y += directionBalle2Y;
+
+        if (positionBalle2X <= 0 || positionBalle2X >= COLONNES - 1)
+        {
+            directionBalle2X = -directionBalle2X;
+        }
+        if (positionBalle2Y <= 0 || positionBalle2Y >= LIGNES - 1)
+        {
+            directionBalle2Y = -directionBalle2Y;
+        }
+        positionBalle3X += directionBalle2X;
+        positionBalle3Y += directionBalle2Y;
+
+        if (positionBalle3X <= 0 || positionBalle2X >= COLONNES - 1)
+        {
+            directionBalle3X = -directionBalle2X;
+        }
+        if (positionBalle3Y <= 0 || positionBalle2Y >= LIGNES - 1)
+        {
+            directionBalle3Y = -directionBalle2Y;
+        }
+        if (positionBalle4X <= 0 || positionBalle4X >= COLONNES - 1)
+        {
+            directionBalle4X = -directionBalle4X;
+        }
+        if (positionBalle4Y <= 0 || positionBalle4Y >= LIGNES - 1)
+        {
+            directionBalle4Y = -directionBalle4Y;
+        }
+
+        if (positionBalle5X <= 0 || positionBalle5X >= COLONNES - 1)
+        {
+            directionBalle5X = -directionBalle5X;
+        }
+        if (positionBalle5Y <= 0 || positionBalle5Y >= LIGNES - 1)
+        {
+            directionBalle5Y = -directionBalle5Y;
+        }
+
+        if (positionBalle6X <= 0 || positionBalle6X >= COLONNES - 1)
+        {
+            directionBalle6X = -directionBalle6X;
+        }
+        if (positionBalle6Y <= 0 || positionBalle6Y >= LIGNES - 1)
+        {
+            directionBalle6Y = -directionBalle6Y;
+        }
+
+        matrice[positionBalle2Y][positionBalle2X] = 'O';
+        matrice[positionBalle3Y][positionBalle3X] = 'O' ;
+        matrice[positionBalleY][positionBalleX] = 'O' ;
+        matrice[positionBalle4Y][positionBalle4X] = 'O';
+        matrice[positionBalle5Y][positionBalle5X] = 'O';
+        matrice[positionBalle6Y][positionBalle6X] = 'O';
+
+        creationMatrice(matrice, tempsRestant);
+
+        printf("\n\n(Appuyer sur entree pour lancer le jeu et sur m pour la stopper)"
+               "\n(Appuyer sur r pour acceder au regles du jeu)\n(Appuyer sur T pour voir les touches)\n");
+
+        int nombreOiseauxCaptures = 0;
+        for (int i = 0; i < 4; i++) {
+            if (oiseauxACapture[i]) {
+                nombreOiseauxCaptures++;
+            }
+        }
+        Color(6,0);
+        printf("\nNombre d'oiseaux captures : ");
+        Color(7,0);
+        printf("%d", nombreOiseauxCaptures);
+        Color(3,0);
+        if (nombreOiseauxCaptures == 4)
+        {
+            Color(7,0);
+            scorePartie = ScorePartie(tempsRestant);
+            scoreTotal += scorePartie;
+            system("cls");
+            Color(7,0);
+            printf("\n\n\tVictoire ! Vous avez reussi a terminer le jeu !");
+            ScoreMenu();
+            Color(5,0);
+            printf("                                                                                                                                                      \n"
+                   "                   ,(%&&&@@&(*.      .......      ..,,,,,,,    .,/((((/,.            ./&@&@&&&&@@%,           ...             /&@(        .&&@@%*     \n"
+                   "               ,&&&(.        *#&&&&&((((/(&&    %&#///**%&,/&&&#/.    .*#&&&(     ,&&%,   ..     .(&&&&&&&%%##(((##%&&&&#*&&&%/ %&.      .&&..  /%&@( \n"
+                   "             ,&&*.               #&%.     #&*   /&(.    &&&%..              #&% .%&*                .#&&.               ,%& .   .&&.    .&&,    ,&&, *\n"
+                   "            ,&&.   .#&&&&&&&%/ .%&&%.     .&&,  .&%    ,&@*     *#&&@&%*     ,&&&&..   *%&&&&&&&#.    %&,   ./#%&&%(,      %,    ,@&.  .&&..   /&&    \n"
+                   "            (&(   ,&@.      .#&&&%&%.      *&&.  &&    /&(    (@%*    .%@#    /&&(   .%&(      .&&,    &*   ,&&.   ,#&&,    (*    *&# .&&..   #&#     \n"
+                   "            (&(   .&&/         .,*&%   .    /&%  #@.   #&.   /&%        #&/   .&&,   /&%        *&%    %/   ,&&.     .&@,   .&*    (&&&&..  .&@*      \n"
+                   "            .&&.     (&&@&%(,    /@%.  *&.   /&& #&*   %#.  .%&*        ,@%    &%.   %&/         &&.   /(   ,&&.      (&(   .&&*    (&&.   *&&,       \n"
+                   "              %&%.         ,/#&&%(&%.  *&&.   /&%#&*   %(   .&&.         &&    /#    %&,         #&.   .#   .&&.     .&&,   ,&@&*    /    /&&.        \n"
+                   "                /&@&#*.         /&&%   *&@&.   /&&&/   %(   .&&          %&.   ,#    %&.         (&*    #.  .&&,  .(&&%.    &&,&&,.      (&%          \n"
+                   "                     ,#&&&&#.    *&#   ,&&&&.   ,&&,   %(   .&&.         #&.   .#    #&*         (&*   .%.   /%%%#/. .    *&&* .&&     .#@#           \n"
+                   "            .&&&*          #&/    &#   ,&&.&@,   ,&.   %#    #&*         %&    *%.   /&#         %&.   ,&,             .(&&(   ,&&    .%&(            \n"
+                   "           .&&.,%&&#*.  .*%&&,   *&(   .&&..&&,        %&.   ,&&.       (&#    #&*    (&#       %&/    #&,   *###%%&&&&&(.    /&%    ,&&*             \n"
+                   "          ,&&.      ,#%%%*      *&&*   .&&,  &&,       %&(     %&&/..,%&&*    ,&&&.     %&&@&&&&( .   *&&,   /@%             #@(    ,&&*              \n"
+                   "          /&&*               ./&&&&.   .%&*  .&&.      #&&%      ..**,.      /&&*%&(                ,#&@&,   *@&.           %&*    ,&&.               \n"
+                   "            ,%@&&%#(/**//(#&&&%,,&&((###&@(   .&&,   ..#@#&&#.            ,(&&(   .&&&(,.       .*#&&%.&&.   .@&,         ,&@&%/..,&&,                \n"
+                   "                   ,////*,       .....          &&&&&&&&%/  *%&&@&%##%&&@&&(          /%&&&&&&&&&#*   .&&@&&&&&&/              (%&&&*            ");
+            Color(4,0);
+            printf("\n(Appuyer sur echap pour revenir au menu principal)");
+            Color(3,0);
+            sleep(3);
+            jeuEnPause = true;
+            break;
+
+        }
+        if (_kbhit()) {
+            char deplacement = _getch();
+
+            matrice[PositionInitY][PositionInitX] = ' ';
+
+            int nextPositionX = PositionInitX;
+            int nextPositionY = PositionInitY;
+
+            if (deplacement == 'q' && PositionInitX > 0)
+            {
+                nextPositionX = PositionInitX - 1;
+            }
+            else if (deplacement == 'd' && PositionInitX < COLONNES - 1)
+            {
+                nextPositionX = PositionInitX + 1;
+            }
+            else if (deplacement == 'z' && PositionInitY > 0)
+            {
+                nextPositionY = PositionInitY - 1;
+            }
+            else if (deplacement == 's' && PositionInitY < LIGNES - 1)
+            {
+                nextPositionY = PositionInitY + 1;
+            }
+            else if (deplacement == 'm')
+            {
+                MettreEnPause();
+            }
+            else if (deplacement == 'r')
+            {
+                VoirReglesInGame();
+            }
+            else if (deplacement == 'Q')
+            {
+                Color(2,0);
+                printf("\n\n\nVous avez decide de revenir au menu principal! (Appuyer sur Echap)");
+                Color(3,0);
+                RevenirMenuPrincipale();
+                Color(4,0);
+                centrerTexte(0);
+                printf("(Appuyer sur echap pour revenir au menu principal)");
+                Color(3,0);
+                break;
+            }
+            else if (deplacement == 'T')
+            {
+                MenuTouche();
+            }
+            else if (deplacement == 'S')
+            {
+                printf("\n");
+                InformationsPartie partie;
+                sauvegarderPartie(&partie);
+            }
+            if (!(matrice[nextPositionY][nextPositionX] == '#')) {
+                PositionInitX = nextPositionX;
+                PositionInitY = nextPositionY;
+            }
+
+            if (!oiseauxACapture[0] && PositionInitX == Oiseau1_X && PositionInitY == Oiseau1_Y)
+            {
+                oiseauxACapture[0] = true;
+            }
+            if (!oiseauxACapture[1] && PositionInitX == Oiseau2_X && PositionInitY == Oiseau2_Y)
+            {
+                oiseauxACapture[1] = true;
+            }
+            if (!oiseauxACapture[2] && PositionInitX == Oiseau3_X && PositionInitY == Oiseau3_Y)
+            {
+                oiseauxACapture[2] = true;
+            }
+            if (!oiseauxACapture[3] && PositionInitX == Oiseau4_X && PositionInitY == Oiseau4_Y)
+            {
+                oiseauxACapture[3] = true;
+            }
+        }
+        Sleep(100);
+    }
+    ViesRestantes = 3;
+    jeuEnCours = true;
+    jeuEnPause = false;
+    reglesInGame = false;
 }
 
 void MettreEnPause()
@@ -355,16 +1282,14 @@ int ScorePartie(int tempsRestant)
 void ScoreMenu ()
 {
     Color(7,0);
-    printf("\n\n\tScore de la Partie en Cours : %d\n", scorePartie);
-    Color(4,0);
-    printf("\n(Appuyer sur echap pour revenir au Menu Principal)\n");
+    printf("\n\n\tScore de la Partie en Cours : %d\n", scoreTotal);
 }
 
 void PoserBloc(char matrice[LIGNES][COLONNES], int x, int y)
 {
     if (x >= 0 && x < COLONNES && y >= 0 && y < LIGNES)
     {
-    matrice[y][x] = BLOC;
+    matrice[y][x] = '#';
     }
 }
 
@@ -391,41 +1316,114 @@ void encadrerTitre(int largeurTexte)
     printf("\n ");
 }
 
-void afficherBlocSurprise(){
-    int seed = 111;
-    srand((unsigned int)&seed);
-    int MIN = 0;
-    int MAX = 1000;
-    int nb_alea = MIN + rand() % (MAX - MIN + 1);
+void MenuTouche()
+{
+    system("cls");
+    reglesInGame = true;
+    encadrerTitre(9);
+    printf("TOUCHES :\n");
+    encadrerTitre(9);
+    printf("\n\nAvancer : z\nReculer : s\nDroite : d\n"
+           "Gauche : q\nPause : m\nVoir les regles du jeu : r\nQuitter la partie : Q\nLancer la partie : Enter\n"
+           "Sauvegarder la partie : S\n");
+    Color(4,0);
+    printf("\n\n\t(Appuyer sur ECHAP pour revenir a la partie)\n");
+    Color(3,0);
+    while (_getch() != ECHAP);
+    reglesInGame = false;
+}
 
+bool verifierMotDePasse(char motDePasseAttendu[], char motDePasseUtilisateur[])
+{
+    return strcmp(motDePasseAttendu, motDePasseUtilisateur) == 0;
+}
 
-
-    if (nb_alea == 666) {
-        printf("Pas de chance, vous etes tombe sur la malediction de la balle et elle vous a tuee instantanement\n");
-    } else if (nb_alea == 777) {
-        printf("Wow tous les oiseaux ont accourus vers vous. Vous avez gagne\n");
-    } else if (666 < nb_alea && nb_alea < 777) {
-        printf("Dommage, il n'y avait rien.\n");
-    } else if (0 <= nb_alea && nb_alea < 200) {
-        printf("La balle est gelee pendant 5 secondes.\n");
-    } else if (200 <= nb_alea && nb_alea < 400) {
-        printf("La balle s'est dedoublee!!\n");
-    } else if (400 <= nb_alea && nb_alea < 600) {
-        printf("Vous avez gagne une vie.\n");
-    } else if ((600 <= nb_alea && nb_alea < 666) || (777 < nb_alea && nb_alea < 800)) {
-        printf("Vous etes invincible pendant 5 secondes.\n");
-    } else if (800 <= nb_alea && nb_alea <= 1000) {
-        printf("Vous avez perdu une vie.\n");
+void JouerNiveauMdp()
+{
+    char motDePasseUtilisateur[20];
+    int choix;
+    centrerTexte(30);
+    Color(3, 0);
+    printf("Entrez un mot de passe secret pour acceder au niveau desire : \n");
+    centrerTexte(30);
+    encadrerTitre(57);
+    scanf("%s", motDePasseUtilisateur);
+    if (verifierMotDePasse(motDePasseNiveau1, motDePasseUtilisateur))
+    {
+        choix = 1;
     }
-    blocSurpriseActive = false;
-    return 0;
+    else if (verifierMotDePasse(motDePasseNiveau2, motDePasseUtilisateur))
+    {
+        choix = 2;
+    }
+    else if (verifierMotDePasse(motDePasseNiveau3, motDePasseUtilisateur))
+    {
+        choix = 3;
+    }
+    else if (verifierMotDePasse(motDePasseNiveau4, motDePasseUtilisateur))
+    {
+        choix = 4;
+    }
+    else
+    {
+        system("cls");
+        Color(4, 0);
+        printf("Mot de passe incorrect.\n");
+        Color(3, 0);
+        JouerNiveauMdp();
+        return;
+    }
+    lancerNiveau(choix);
 }
 
-void genererCoordonneesBlocSurprise() {
-    do {
-        positionBlocSurpriseX = rand() % (COLONNES - 2) + 1;
-        positionBlocSurpriseY = rand() % (LIGNES - 2) + 1;
-    } while (matrice[positionBlocSurpriseY][positionBlocSurpriseX] != ' '); 
+void lancerNiveau(int niveau)
+{
+    switch (niveau) {
+        case 1:
+            afficherSNOOPY();
+            break;
+        case 2:
+            afficherSNOOPY_niveau2();
+            break;
+        case 3:
+            afficherSNOOPY_niveau3();
+            break;
+        case 4:
+            afficherSNOOPY_niveau4();
+            break;
+        default:
+            printf("Niveau non valide.\n");
+    }
 }
 
+void sauvegarderPartie(InformationsPartie *infos) {
+    FILE *fichier;
+    char nomFichier[50];
 
+    printf("Entrez le nom du fichier de sauvegarde : ");
+    scanf("%s", nomFichier);
+
+    fichier = fopen(nomFichier, "wb");
+    if (fichier == NULL) {
+        perror("Erreur lors de l'ouverture du fichier de sauvegarde");
+        exit(EXIT_FAILURE);
+    }
+
+    fwrite(infos, sizeof(InformationsPartie), 1, fichier);
+
+    fclose(fichier);
+}
+
+void chargerPartie(InformationsPartie *infos, const char *nomFichier)
+{
+    FILE *fichier;
+    fichier = fopen(nomFichier, "rb");
+    if (fichier != NULL) {
+        if (fread(infos, sizeof(InformationsPartie), 1, fichier) != 1) {
+            printf("Erreur lors de la lecture de la sauvegarde.\n");
+        }
+        fclose(fichier);
+    } else {
+        printf("Impossible de charger la partie. Le fichier %s n'existe pas.\n", nomFichier);
+    }
+}
