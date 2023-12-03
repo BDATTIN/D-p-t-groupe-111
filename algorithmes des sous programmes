@@ -60,5 +60,12 @@ Algorithme afficherHorloge(param: pointeur vers entier)
     
 FIN Algorithme
 
+Algorithme pour mettre en pause 
 
-
+Fonction MettreEnPause()
+    Afficher "Vous avez décidé de mettre en pause le jeu ! Si vous voulez reprendre le jeu, appuyez sur 'm'..."
+    
+    Tant que LireCaractere() différent de 'm' Faire
+        // Attente jusqu'à ce que l'utilisateur appuie sur 'm'
+    Fin Tant que
+Fin Fonction
