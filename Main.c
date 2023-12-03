@@ -1,20 +1,7 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <conio.h>
-#include <windows.h>
-#include "time.h"
-#include "Bibliothèque_SousProgrammes.h"
-#include <stdbool.h>
-#define LIGNES 10
-#define COLONNES 20
-#define ECHAP 0x1B
-
-
-int main (){
+int main() {
     int choix;
-    int positionBlocSpecialX = 7;
-    int positionBlocSpecialY = 13;
+    char matrice[LIGNES][COLONNES];
+    int tempsRestant, PositionInitX, PositionInitY, positionBalleX, positionBalleY, ViesRestantes, scorePartie;
     while (choix != 6)
     {
         Color(3,0);
@@ -31,10 +18,10 @@ int main (){
         printf("Voir les regles du jeu : 1\n\n");
         centrerTexte(20);
         printf("Demarrer une nouvelle partie au niveau 1 : 2\n\n");
-        centrerTexte(22);
-        printf("Charger une partie (pas encore disponible) : 3\n\n");
-        centrerTexte(14);
-        printf("Mot de passe(pas encore disponible) : 4\n\n");
+        centrerTexte(0);
+        printf("Charger une partie : 3\n\n");
+        centrerTexte(0);
+        printf("Mot de passe secret : 4\n\n");
         centrerTexte(-13);
         printf("Scores : 5\n\n");
         centrerTexte(-6);
@@ -46,29 +33,32 @@ int main (){
                 RevenirMenuPrincipale();
                 break;
             case 2 :
-                afficherSNOOPY(positionBlocSpecialX, positionBlocSpecialY);
+                afficherSNOOPY();
                 RevenirMenuPrincipale();
                 break;
             case 3 :
                 system("cls");
-                printf("Choisir un ancien ficher de sauvegarde :\n");
-                Color(4,0);
-                printf("\n\n\n(Appuyer sur echap pour revenir au menu principal)");
-                Color(3,0);
-                RevenirMenuPrincipale();
+                InformationsPartie partie;
+                char nomFichier[50];
+                printf("Entrez le nom du fichier de sauvegarde : ");
+                scanf("%s", nomFichier);
+                printf("Nom du fichier : %s\n", nomFichier);
+                chargerPartie(&partie, nomFichier);
+                printf("Chargement termine.\n");
+                printf("Matrice[0][0] : %c\n", partie.matrice[0][0]);
+                printf("Temps restant : %d\n", partie.tempsRestant);
                 break;
             case 4 :
                 system("cls");
-                printf("Entrez un mot de passe pour lancer un jeu secret\n");
-                Color(4,0);
-                printf("\n\n\n(Appuyer sur echap pour revenir au menu principal)");
-                Color(3,0);
+                JouerNiveauMdp();
                 RevenirMenuPrincipale();
                 break;
             case 5 :
                 system("cls");
                 printf("Le score de votre partie en cours est de :\n");
                 ScoreMenu();
+                Color(4,0);
+                printf("\n(Appuyer sur echap pour revenir au Menu Principal)\n");
                 RevenirMenuPrincipale();
                 break;
             case 6 :
