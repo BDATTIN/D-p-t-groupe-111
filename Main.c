@@ -11,7 +11,7 @@
 #define ECHAP 0x1B
 
 
-int main() {
+int main (){
     int choix;
     int positionBlocSpecialX = 7;
     int positionBlocSpecialY = 13;
