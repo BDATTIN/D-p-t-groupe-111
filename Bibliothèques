@@ -1,11 +1,21 @@
-//
-// Created by ethan on 08/11/2023.
-//
 
 #ifndef PROJET_SNOOPY_BIBLIOTHÈQUE_SOUSPROGRAMMES_H
 #define PROJET_SNOOPY_BIBLIOTHÈQUE_SOUSPROGRAMMES_H
 #define LIGNES 10
 #define COLONNES 20
+
+typedef struct
+{
+    char matrice[LIGNES][COLONNES];
+    int tempsRestant;
+    int positionSnoopyX;
+    int positionSnoopyY;
+    int positionBalleX;
+    int positionBalleY;
+    int ViesRestantes;
+    int scorePartie;
+} InformationsPartie;
+
 
 
 #endif //PROJET_SNOOPY_BIBLIOTHÈQUE_SOUSPROGRAMMES_H
@@ -17,9 +27,21 @@ void RegleDuJeu ();
 void RevenirMenuPrincipale();
 void VoirReglesInGame();
 int ScorePartie(int tempsRestant);
+int ScoreTotal();
 void ScoreMenu ();
 void PoserBloc(char matrice[LIGNES][COLONNES], int x, int y);
 void Color(int couleurDuTexte,int couleurDeFond);
 void centrerTexte(int largeurTexte);
 void encadrerTitre(int largeurTexte);
-void afficherBlocSpecial(char matrice[LIGNES][COLONNES], int x, int y);
+void MenuTouche();
+void afficherSNOOPY_niveau2();
+void afficherSNOOPY_niveau3();
+void afficherSNOOPY_niveau4();
+void JouerNiveauMdp();
+void lancerNiveau(int niveau);
+bool verifierMotDePasse(char motDePasseAttendu[], char motDePasseUtilisateur[]);
+void sauvegarderPartie(InformationsPartie *infos);
+void chargerPartie(InformationsPartie *infos, const char *nomFichier);
+
+
+
