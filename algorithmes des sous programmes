@@ -69,3 +69,14 @@ Fonction MettreEnPause()
         // Attente jusqu'à ce que l'utilisateur appuie sur 'm'
     Fin Tant que
 Fin Fonction
+
+fonction voir regles in game 
+Fonction VoirReglesInGame()
+    Effacer l'écran (system("cls"))
+    reglesInGame ← vrai
+    Appeler la fonction RegleDuJeu()
+    Tant que la touche lue par _getch() n'est pas 'r' Faire
+        // Attendre que l'utilisateur appuie sur 'r' pour revenir
+    Fin Tant que
+    reglesInGame ← faux
+Fin Fonction
